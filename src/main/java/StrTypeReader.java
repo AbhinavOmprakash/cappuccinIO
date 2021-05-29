@@ -4,7 +4,7 @@ public class StrTypeReader implements FReader {
     Reader reader;
 
     public StrTypeReader(String uri, int bufferSize) throws FileNotFoundException{
-        reader = new java.io.BufferedReader(new FileReader(uri), bufferSize);
+        reader = new BufferedReader(new FileReader(uri));
     }
 
     @Override
@@ -14,9 +14,9 @@ public class StrTypeReader implements FReader {
 
     @Override
     public int read() throws IOException {
+
         return reader.read();
     }
-
 
     public int read(char[] cbuf, int off, int len) throws IOException {
         return reader.read();

@@ -3,36 +3,21 @@ import java.io.*;
 public class Foam implements Closeable {
     FReader reader;
     FWriter writer;
+    java.io.BufferedReader bufferedReader;
 
     public Foam(String uri, String mode, int bufferSize) throws IOException {
         switch (mode) {
-            case "r":
-                setReadMode(uri, bufferSize);
-            case "w":
-                setWriteMode(uri, bufferSize, false);
-            case "a":
-                setWriteMode(uri, bufferSize, true);
-            case "rb":
-                setByteReadMode(uri, bufferSize);
-            case "wb":
-                setByteWriteMode(uri, bufferSize, false);
-            case "ab":
-                setByteWriteMode(uri, bufferSize, true);
-            default:
-                setReadMode(uri, bufferSize);
+            case "w" -> writer = new StrTypeWriter(uri, bufferSize, false);
+            case "a" -> writer = new StrTypeWriter(uri, bufferSize, true);
+            case "rb" -> reader = new ByteTypeReader(uri, bufferSize);
+            case "wb" -> writer = new ByteTypeWriter(uri, bufferSize, false);
+            case "ab" -> writer = new ByteTypeWriter(uri, bufferSize, true);
+            default -> reader = new StrTypeReader(uri, bufferSize);
         }
     }
 
-    private void setReadMode(String uri, int bufferSize) throws IOException {
-        reader = new StrTypeReader(uri, bufferSize);
-    }
-
-    private void setWriteMode(String uri, int bufferSize, boolean append) throws IOException {
-        writer = new StrTypeWriter(uri, bufferSize, append);
-    }
-
-    private void setByteReadMode(String uri, int bufferSize) throws IOException {
-        reader = new ByteTypeReader(uri, bufferSize);
+    public Foam(String uri, String mode) throws IOException {
+        this(uri, mode, 8192); //8192 is the default size of the buffer
     }
 
     private void setByteWriteMode(String uri, int bufferSize, boolean append) throws IOException {
@@ -53,9 +38,14 @@ public class Foam implements Closeable {
 
     @Override
     public void close() throws IOException {
-        reader.close();
-        writer.flush();
-        writer.close();
+        if(reader != null) {
+            reader.close();
+        }
+
+        if(writer != null) {
+            writer.flush();
+            writer.close();
+        }
     }
 
 }
