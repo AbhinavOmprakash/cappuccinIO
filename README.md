@@ -1,5 +1,5 @@
 # cappuccinIO
 
-javaIO + foam = cappuccinoIO
+javaIO + foam = cappuccinIO
 
 An attempt to simplify javaIO
